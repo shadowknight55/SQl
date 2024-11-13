@@ -206,8 +206,11 @@ ORDER BY total_amount_spent DESC;
 -- #### Reflection Questions 1
 -- After completing the joins, reflect on the following:
 -- - How does joining tables help you get a fuller picture of customer orders and product information?
+-- By joining the customers table with the orders table, we can retrieve not just the order data but also customer details like name, email, and address
 -- - Which joins were most challenging to understand? Why?
+-- LEFT JOIN: because it includes all records from the left table (e.g., orders), even if there is no matching record in the right table
 -- - How could joining tables and using aggregations be useful for reporting in an e-commerce application?
+-- By joining orders with order_details and using SUM(), you can calculate total sales for each day
 
 -- #### Reflection 2
 -- - How do the tables work together to create a full picture of customers and orders?
@@ -220,5 +223,8 @@ ORDER BY total_amount_spent DESC;
 #### Reflection Questions 3
 -- Once you’ve completed the queries, consider the following:
 -- How do aggregate functions like `SUM()` and `AVG()` help you gain insights into the data?
+-- Aggregate functions like SUM() and AVG() are invaluable in summarizing large datasets
 -- What insights could you gather from combining multiple functions (e.g., `SUM()` and `DATE()`)?
+-- Combining multiple functions like SUM() and DATE() can provide more granular insights that are time-sensitive and actionable
 -- Why might limiting results (e.g., to the top 5) be useful in reporting for an e-commerce store?
+-- For instance, if you are analyzing sales, limiting the query to the top 5 products
