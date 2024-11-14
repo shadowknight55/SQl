@@ -1,8 +1,14 @@
 -- 1. Create the database
-CREATE DATABASE ecommerce_store;
+CREATE DATABASE IF NOT EXISTS ecommerce_store;
 USE ecommerce_store;
 
--- 2. Create the customers table
+-- 2. Drop tables if they exist to avoid conflicts
+DROP TABLE IF EXISTS order_details;
+DROP TABLE IF EXISTS orders;
+DROP TABLE IF EXISTS products;
+DROP TABLE IF EXISTS customers;
+
+-- 3. Create the customers table
 CREATE TABLE customers (
     customer_id INT AUTO_INCREMENT PRIMARY KEY,
     first_name VARCHAR(50) NOT NULL,
@@ -14,7 +20,7 @@ CREATE TABLE customers (
     zip_code VARCHAR(10)
 );
 
--- 3. Create the products table
+-- 4. Create the products table
 CREATE TABLE products (
     product_id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
@@ -24,101 +30,101 @@ CREATE TABLE products (
     date_added TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- 4. Create the orders table
+-- 5. Create the orders table
 CREATE TABLE orders (
     order_id INT AUTO_INCREMENT PRIMARY KEY,
     customer_id INT,
     order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     order_status ENUM('Pending', 'Shipped', 'Delivered', 'Cancelled') DEFAULT 'Pending',
     total_amount DECIMAL(10, 2) NOT NULL,
-    FOREIGN KEY (customer_id) REFERENCES customers(customer_id)
+    FOREIGN KEY (customer_id) REFERENCES customers(customer_id) ON DELETE CASCADE
 );
 
--- 5. Create the order_details table
+-- 6. Create the order_details table
 CREATE TABLE order_details (
     order_detail_id INT AUTO_INCREMENT PRIMARY KEY,
-    order_id INT,
-    product_id INT,
+    order_id INT NOT NULL,
+    product_id INT NOT NULL,
     quantity INT NOT NULL,
     price_per_product DECIMAL(10, 2) NOT NULL,
-    FOREIGN KEY (order_id) REFERENCES orders(order_id),
-    FOREIGN KEY (product_id) REFERENCES products(product_id)
+    FOREIGN KEY (order_id) REFERENCES orders(order_id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES products(product_id) ON DELETE CASCADE
 );
 
--- 6. Insert sample data into customers table
+-- 7. Insert sample data into customers table
 INSERT INTO customers (first_name, last_name, email, phone_number, city, state, zip_code)
 VALUES 
 ('John', 'Doe', 'johndoe@example.com', '123-456-7890', 'Springfield', 'IL', '62701'),
 ('Jane', 'Smith', 'janesmith@example.com', '987-654-3210', 'Homer', 'AK', '99603');
 
--- 7. Insert sample data into products table
+-- 8. Insert sample data into products table
 INSERT INTO products (name, description, price, stock_quantity)
 VALUES 
 ('Laptop', 'A high-end laptop', 1200.00, 50),
 ('Smartphone', 'A latest model smartphone', 800.00, 100),
 ('Headphones', 'Noise-canceling headphones', 150.00, 200);
 
--- 8. Insert sample data into orders table
+-- 9. Insert sample data into orders table
 INSERT INTO orders (customer_id, total_amount, order_status)
 VALUES 
 (1, 1200.00, 'Shipped'),
 (2, 1000.00, 'Delivered'),
 (1, 800.00, 'Pending');
 
--- 9. Insert sample data into order_details table
+-- 10. Insert sample data into order_details table
 INSERT INTO order_details (order_id, product_id, quantity, price_per_product)
 VALUES 
-(1, 1, 1, 1200.00), -- John Doe ordered 1 Laptop
-(2, 2, 1, 800.00),  -- Jane Smith ordered 1 Smartphone
-(3, 2, 1, 800.00);  -- John Doe ordered 1 Smartphone
+(1, 1, 1, 1200.00),  -- John Doe ordered 1 Laptop
+(2, 2, 1, 800.00),   -- Jane Smith ordered 1 Smartphone
+(3, 2, 1, 800.00);   -- John Doe ordered 1 Smartphone
 
--- 10. Aggregate Functions and Reports
+-- Aggregate Functions and Joins for Analysis
 
--- 10.1 Calculate Average Order Value
+-- 1. Calculate Average Order Value
 SELECT order_id, AVG(total_amount) AS average_order_value
 FROM orders
 GROUP BY order_id;
 
--- 10.2 Count Orders by Status
+-- 2. Count Orders by Status
 SELECT order_status AS status, COUNT(*) AS order_count
 FROM orders
 GROUP BY order_status;
 
--- 10.3 Find Highest Priced Product
+-- 3. Find Highest Priced Product
 SELECT product_id, name, price
 FROM products
 WHERE price = (SELECT MAX(price) FROM products);
 
--- 10.4 Find Lowest Priced Product
+-- 4. Find Lowest Priced Product
 SELECT product_id, name, price
 FROM products
 WHERE price = (SELECT MIN(price) FROM products);
 
--- 10.5 Calculate Total Quantity Sold per Product
+-- 5. Calculate Total Quantity Sold per Product
 SELECT p.product_id, p.name, SUM(od.quantity) AS total_quantity_sold
 FROM order_details od
 JOIN products p ON od.product_id = p.product_id
 GROUP BY p.product_id;
 
--- 10.6 Calculate Total Sales Revenue per Day
+-- 6. Calculate Total Sales Revenue per Day
 SELECT DATE(order_date) AS order_date, SUM(total_amount) AS total_revenue
 FROM orders
 GROUP BY DATE(order_date);
 
--- 10.7 List Customers with Total Amount Spent
+-- 7. List Customers with Total Amount Spent
 SELECT c.customer_id, c.first_name, c.last_name, SUM(od.price_per_product * od.quantity) AS total_spent
 FROM customers c
 JOIN orders o ON c.customer_id = o.customer_id
 LEFT JOIN order_details od ON o.order_id = od.order_id  -- Using LEFT JOIN to account for orders with no details
 GROUP BY c.customer_id;
 
--- 10.8 Calculate Average Order Quantity per Product
+-- 8. Calculate Average Order Quantity per Product
 SELECT od.product_id, p.name, AVG(od.quantity) AS avg_quantity
 FROM order_details od
 JOIN products p ON od.product_id = p.product_id
 GROUP BY od.product_id;
 
--- 11. Retrieve Customer Order Details (Delivered orders only)
+-- 9. Retrieve Customer Order Details (Delivered orders only)
 SELECT 
     c.customer_id, 
     c.first_name, 
@@ -129,7 +135,7 @@ FROM customers c
 JOIN orders o ON c.customer_id = o.customer_id
 WHERE o.order_status = 'Delivered';
 
--- 12. Get Detailed Order Items for a Specific Order (Example: order_id = 1)
+-- 10. Get Detailed Order Items for a Specific Order (Example: order_id = 1)
 SELECT 
     o.order_id, 
     od.product_id, 
@@ -142,7 +148,7 @@ JOIN products p ON od.product_id = p.product_id
 WHERE o.order_id = 1
 ORDER BY od.product_id;
 
--- 13. List Orders with Customer Information (Pending orders only)
+-- 11. List Orders with Customer Information (Pending orders only)
 SELECT 
     o.order_id, 
     o.order_date, 
@@ -154,7 +160,7 @@ FROM orders o
 JOIN customers c ON o.customer_id = c.customer_id
 WHERE o.order_status = 'Pending';
 
--- 14. Calculate Total Sales per Customer
+-- 12. Calculate Total Sales per Customer
 SELECT 
     c.customer_id, 
     c.first_name, 
@@ -165,7 +171,7 @@ JOIN orders o ON c.customer_id = o.customer_id
 LEFT JOIN order_details od ON o.order_id = od.order_id  -- Using LEFT JOIN to include orders without details
 GROUP BY c.customer_id;
 
--- 15. Find Products Ordered by Multiple Customers
+-- 13. Find Products Ordered by Multiple Customers
 SELECT 
     od.product_id, 
     p.name AS product_name, 
@@ -176,7 +182,7 @@ JOIN orders o ON od.order_id = o.order_id
 GROUP BY od.product_id
 HAVING customer_count > 1;
 
--- 16. Display All Product Sales with Quantities and Customers
+-- 14. Display All Product Sales with Quantities and Customers
 SELECT 
     p.product_id, 
     p.name AS product_name, 
@@ -189,7 +195,7 @@ JOIN orders o ON od.order_id = o.order_id
 JOIN customers c ON o.customer_id = c.customer_id
 ORDER BY p.product_id, o.customer_id;
 
--- 17. Bonus: Complex Join with Aggregation (Customer Orders and Amount Spent)
+-- 15. Complex Join with Aggregation (Customer Orders and Amount Spent)
 SELECT 
     c.customer_id, 
     c.first_name, 
@@ -201,7 +207,6 @@ JOIN orders o ON c.customer_id = o.customer_id
 LEFT JOIN order_details od ON o.order_id = od.order_id  -- Using LEFT JOIN to avoid losing orders without details
 GROUP BY c.customer_id
 ORDER BY total_amount_spent DESC;
-
 
 -- #### Reflection Questions 1
 -- After completing the joins, reflect on the following:
