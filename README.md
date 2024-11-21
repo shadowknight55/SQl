@@ -183,11 +183,7 @@ Get started with Microsoft SQL Server downloads. Choose a SQL Server trial, edit
 nodejs.orgnodejs.org
 Node.js — Run JavaScript Everywhere
 Node.js® is a JavaScript runtime built on Chrome's V8 JavaScript engine.
-
-
-
-
-
+![image](https://github.com/user-attachments/assets/84f37630-a87f-401e-9d17-d04cb2722aea)
 
 
 
