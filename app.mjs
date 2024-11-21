@@ -1,19 +1,22 @@
-require('dotenv').config();
+// Create Sequelize instance
+import { Sequelize,DataTypes } from "sequelize";
 
-const mysql = require('mysql2');
-
-const connection = mysql.createConnection({
-    host: process.env.DB_HOST,
-    port: process.env.DB_PORT,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-});
-
-connection.connect((err) => {
-    if (err) {
-        console.error('Error connecting to the database:', err.stack);
-        return;
+const sequelize = new Sequelize(
+    'ecommerce_store',
+    'root',
+    'Kingbear',
+    {
+        host: process.env.DB_HOST,
+        port: process.env.DB_PORT,
+        dialect: 'mysql', // Change to your database dialect if needed
     }
-    console.log('Connected to the database as id', connection.threadId);
-});
+);
+const testConnection = async () => {
+    try {
+        await sequelize.authenticate();
+        console.log('Connection has been established successfully.');
+    } catch (error) {
+        console.error('Unable to connect to the database:', error);
+    }
+};
+testConnection();
