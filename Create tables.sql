@@ -147,7 +147,7 @@ ORDER BY total_amount_spent DESC;
 -- - What challenges did you face in designing this schema?
 -- I faced the biggest chagllend forgetting the small things 
 
-#### Reflection Questions 3
+-- #### Reflection Questions 3
 -- Once you’ve completed the queries, consider the following:
 -- How do aggregate functions like `SUM()` and `AVG()` help you gain insights into the data?
 -- Aggregate functions like SUM() and AVG() are invaluable in summarizing large datasets
