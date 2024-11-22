@@ -104,10 +104,10 @@ This schema can be extended to support additional features:
 This guide will walk you through the steps to set up your e-commerce database and application, from installing the required tools to cloning the GitHub repository and running the app.
 ---
 ## *1. Install Required Tools*
-### *a. Install SQL Server*
-1. *Download and Install SQL Server*:
-   - Go to the SQL Server Downloads page.
-   - Choose *SQL Server Community Edition* (free for development).
+### *a. Install SQL *
+1. *Download and Install SQL *:
+   - Go to the SQL Downloads page.
+   - Choose *SQL  Community Edition* (free for development).
    - Run the installer and select *Full Installation*.
 ---
 ### *b. Install Node.js and npm*
@@ -148,12 +148,12 @@ bash
 2. *Configure the .env File*:
    - Create a .env file in the root of the project with the following variables:
 plaintext
-        DB_HOST=localhost
-        DB_PORT=3306
-        DB_NAME=ecommerce_store
-        DB_USER=root
-        DB_PASSWORD=ManECommerceNeedOSHA
-        PORT=3000
+        DB_HOST=
+        DB_PORT=
+        DB_NAME=
+        DB_USER=
+        DB_PASSWORD=
+        PORT=
      
 ---
 ## *4. Run the Application*
@@ -166,20 +166,20 @@ bash
    - Open your browser and go to http://localhost:3000 to see the app in action.
 ---
 ## *5. Verify Everything Works*
-1. *Verify SQL Server Database*:
+1. *Verify SQL Database*:
    - In SSMS, run a query like:
 sql
      SELECT * FROM customers;
      
      to ensure your data is properly inserted.
 2. *Verify Application*:
-   - Ensure the app is running correctly and connecting to your SQL Server database by checking the app's logs.
+   - Ensure the app is running correctly and connecting to your SQL  database by checking the app's logs.
 ---
-With this setup, you now have the e-commerce application running with a local SQL Server database and the ability to manage everything via SSMS and the Node.js application.
+With this setup, you now have the e-commerce application running with a local SQL database and the ability to manage everything via SSMS and the Node.js application.
 ---
 microsoft.commicrosoft.com
-SQL Server Downloads | Microsoft
-Get started with Microsoft SQL Server downloads. Choose a SQL Server trial, edition, tool, or connector that best meets your data and workload needs.
+SQL  Downloads | Microsoft
+Get started with Microsoft SQL  downloads. Choose a SQL  trial, edition, tool, or connector that best meets your data and workload needs.
 nodejs.orgnodejs.org
 Node.js — Run JavaScript Everywhere
 Node.js® is a JavaScript runtime built on Chrome's V8 JavaScript engine.
