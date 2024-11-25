@@ -1,7 +1,10 @@
 // Import Sequelize and DataTypes modules
 // Sequelize is used for interacting with the database
 import { Sequelize, DataTypes } from "sequelize";
-require('dotenv').config();
+
+import dotenv from "dotenv"
+
+dotenv.config();
 // Create a Sequelize instance
 // This instance connects to the 'ecommerce_store' database using the provided credentials
 // Host and port are retrieved from environment variables
