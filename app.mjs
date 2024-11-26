@@ -9,13 +9,14 @@ dotenv.config();
 // This instance connects to the 'ecommerce_store' database using the provided credentials
 // Host and port are retrieved from environment variables
 const sequelize = new Sequelize(
-    'ecommerce_store', // Database name
-    'root',            // Database username
-    'Kingbear',        // Database password
+    
     {
+        database: process.env.DB_NAME, // Database name  
+        username: process.env.DB_USER,  // Database username
+        password: process.env.DB_PASSWORD, // Database password
         host: process.env.DB_HOST, // Database host address
         port: process.env.DB_PORT, // Database port
-        dialect: 'mysql',          // Type of database (MySQL in this case)
+        dialect: 'mysql'          // Type of database (MySQL in this case)
     }
 );
 
